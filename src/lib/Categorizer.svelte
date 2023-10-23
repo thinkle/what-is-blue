@@ -5,7 +5,6 @@
   import { flip } from "svelte/animate";
   import { compareHue, getHue, isBlue } from "./colors";
   import convert from "color-convert";
-  import VirtualList from "svelte-virtual-list";
 
   const [send, receive] = crossfade({ duration: 300 });
 
