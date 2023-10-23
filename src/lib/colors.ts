@@ -1,5 +1,6 @@
 import { derived, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
+import convert from "color-convert";
 
 /* Our svelte implementation will guarantee that 
 for every color keyed in isBlue, we have a map to
@@ -60,7 +61,8 @@ export function getNormalizedColorData(colorString: string) {
       colorMap[colorString] = [r, g, b];
       return [r, g, b];
     } else {
-      throw new Error("Unable to parse color");
+      console.log("WARNING: BAD COLOR?", colorString);
+      return [0, 0, 0];
     }
   }
 }
@@ -81,3 +83,17 @@ export const normalizedData: Readable<DataPoint[]> = derived(
     set(data);
   }
 );
+
+export function getHue(c: string) {
+  let [r, g, b] = getNormalizedColorData(c);
+  let [h, s, l] = convert.rgb.hsl(r, g, b);
+  return h;
+}
+
+export function compareHue(a: string, b: string) {
+  let rgb1 = getNormalizedColorData(a);
+  let rgb2 = getNormalizedColorData(b);
+  let hsl1 = convert.rgb.hsl(...rgb1);
+  let hsl2 = convert.rgb.hsl(...rgb2);
+  return hsl2[0] - hsl1[0];
+}

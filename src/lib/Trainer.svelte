@@ -1,13 +1,13 @@
 <script lang="ts">
   import ModelTester from "./ModelTester.svelte";
-
   import {
     normalizedData,
     getNormalizedColorData,
     isBlue,
   } from "../lib/colors";
-  import { trainModel } from "../neuralnet/model";
+  import { ColorModel } from "../neuralnet/model";
   import ColorGraph from "./ColorGraph.svelte";
+  import ModelSettings from "./ModelSettings.svelte";
 
   let progressUpdates: Array<{
     epoch: number;
@@ -24,16 +24,25 @@
   }
   let applyModel: (color: number[]) => number;
   let model: any;
+  let trainedLayers: string = "";
   async function doTrainModel() {
     training = true;
     progressUpdates = []; // Clear any previous progress updates
-    let result = await trainModel($normalizedData, displayProgress);
-    applyModel = result.applyModel;
-    model = result.model;
+    if (modelLayers) {
+      if (JSON.stringify(modelLayers) != trainedLayers) {
+        model = null;
+      }
+    }
+    let cm = model || new ColorModel(modelLayers);
+    await cm.train($normalizedData, displayProgress);
+    applyModel = (v) => model.apply(v);
+    model = cm;
+    trainedLayers = JSON.stringify(modelLayers);
     training = false;
   }
   let score: number;
   let mode: "test" | "graph" = "graph";
+  let modelLayers = [16];
 </script>
 
 <div>
@@ -42,6 +51,7 @@
       <button disabled={training} on:click={doTrainModel}>
         {#if !model}Train that Model!{:else}Train it some more!{/if}
       </button>
+      <ModelSettings layers={modelLayers} onChange={(v) => (modelLayers = v)} />
       <ul class="progress-updates">
         {#each progressUpdates as { epoch, loss, accuracy }}
           <li>

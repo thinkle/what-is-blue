@@ -1,6 +1,7 @@
 <script lang="ts">
   import ColorBlock from "./ColorBlock.svelte";
-  import { normalizedData } from "./colors";
+  import GraphPoint from "./GraphPoint.svelte";
+  import { normalizedData, type DataPoint } from "./colors";
   import convert from "color-convert";
   export let applyModel: (color: number[]) => number;
 
@@ -184,25 +185,12 @@
           customFormula
         )?.toFixed(3)}
       >
-        <article
-          class:correct
-          class:incorrect
-          class:blue={datum.isBlue}
-          class:notblue={!datum.isBlue}
-        >
-          <section>
-            Model says: {(v > 0.5 && "blue") || "not blue"} ({v?.toFixed(2)})
-          </section>
-          <section>You said: {(datum.isBlue && "blue") || "not blue"}</section>
-          <section>
-            Calculated {selectedOption}: {computeYValue(
-              datum.color,
-              selectedOption,
-              customFormula
-            )?.toFixed(2)}
-          </section>
-          <ColorBlock color={rgbToHex(...datum.color)} />
-        </article>
+        <GraphPoint
+          {datum}
+          {v}
+          mode={selectedOption}
+          y={computeYValue(datum.color, selectedOption, customFormula)}
+        />
       </div>
     {/each}
   </section>
@@ -237,10 +225,11 @@
   div {
     box-sizing: border-box;
     position: absolute;
-    width: 10px;
-    height: 10px;
-    margin-left: -5px;
-    margin-top: -5px;
+    --r: 18px;
+    width: var(--r);
+    height: var(--r);
+    margin-left: calc(-0.5 * var(--r));
+    margin-top: calc(-0.5 * var(--r));
     border-radius: 50%;
   }
 
@@ -270,6 +259,7 @@
   }
   .incorrect {
     border: 2px solid red;
+    z-index: 3;
   }
   .incorrect.blue {
     border: 2px solid blue;
@@ -277,16 +267,29 @@
   div article {
     display: none;
   }
-  div:hover article {
+
+  div.active article {
+    padding: 16px;
     position: relative;
     z-index: 3;
     width: 200px;
     margin-left: -100px;
+    margin-top: 16px;
     gap: 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     background-color: #fffc;
+  }
+  .close {
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    right: 3px;
+    top: 3px;
+    position: absolute;
+    width: 1em;
+    height: 1em;
   }
 </style>

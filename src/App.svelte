@@ -10,27 +10,20 @@
 <main>
   <div>
     <h1>What is Blue?</h1>
-    {#if !showTrainer}
-      <div>
-        Done categorizing? Let's train a model! <button
-          on:click={() => (showTrainer = true)}>Let's build a model!</button
-        >
+    <div class="tabs">
+      <div on:click={() => (showTrainer = false)} class:active={!showTrainer}>
+        Categorize
       </div>
+      <div on:click={() => (showTrainer = true)} class:active={showTrainer}>
+        Train a Model
+      </div>
+    </div>
+    {#if !showTrainer}
       <Categorizer />
     {:else}
-      <div>
-        Back to categorizing? <button on:click={() => (showTrainer = false)}
-          >Categorize</button
-        >
-      </div>
       <Trainer />
     {/if}
   </div>
-  {#each $normalizedData as dp}
-    <li>
-      {dp.color} => {dp.isBlue}
-    </li>
-  {/each}
 </main>
 
 <style>
