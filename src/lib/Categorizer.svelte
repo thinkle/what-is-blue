@@ -78,7 +78,7 @@
 </script>
 
 <section class="categorizer">
-  <header>
+  <header class="rel">
     <select class="corner" bind:value={newColorMode}>
       <option value="default">Random!</option>
       <option value="blueish">Teal/Blue/Purple Hues</option>
@@ -102,7 +102,7 @@
       >
     </div>
   </header>
-  <div class="cols">
+  <div class="cols rel">
     <select class="corner" bind:value={sortMode}>
       <option value="default">As categorized</option>
       <option value="hue">By Hue</option>
@@ -228,5 +228,13 @@
   }
   .gradient {
     background: linear-gradient(to bottom, black 0%, white 100%);
+  }
+  .corner {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+  }
+  .rel {
+    position: relative;
   }
 </style>
