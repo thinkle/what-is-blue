@@ -97,3 +97,10 @@ export function compareHue(a: string, b: string) {
   let hsl2 = convert.rgb.hsl(...rgb2);
   return hsl2[0] - hsl1[0];
 }
+
+export function rgbToHex(r: number, g: number, b: number): string {
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b)
+    .toString(16)
+    .slice(1)
+    .toUpperCase()}`;
+}

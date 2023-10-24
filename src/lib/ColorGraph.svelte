@@ -1,7 +1,7 @@
 <script lang="ts">
   import ColorBlock from "./ColorBlock.svelte";
   import GraphPoint from "./GraphPoint.svelte";
-  import { normalizedData, type DataPoint } from "./colors";
+  import { normalizedData, type DataPoint, rgbToHex } from "./colors";
   import convert from "color-convert";
   export let applyModel: (color: number[]) => number;
 
@@ -110,12 +110,6 @@
       return yValue;
     }
   }
-  function rgbToHex(r: number, g: number, b: number): string {
-    return `#${((1 << 24) + (r << 16) + (g << 8) + b)
-      .toString(16)
-      .slice(1)
-      .toUpperCase()}`;
-  }
 </script>
 
 <section>
@@ -195,8 +189,43 @@
     {/each}
   </section>
 </section>
+<div class="cols">
+  <div class="col">
+    <h3>Colors</h3>
+    {#each $normalizedData as datum}
+      <div>{rgbToHex(...datum.color)}</div>
+    {/each}
+  </div>
+  <div class="col">
+    <h3>Model</h3>
+    {#each $normalizedData as datum}
+      <div>{applyModel(datum.color).toFixed(2)}</div>
+    {/each}
+  </div>
+  <div class="col">
+    <h3>Human</h3>
+    {#each $normalizedData as datum}
+      <div>{datum.isBlue}</div>
+    {/each}
+  </div>
+</div>
 
 <style>
+  .cols,
+  .cols div {
+    position: static;
+    width: inherit;
+    height: inherit;
+  }
+  .cols {
+    display: flex;
+    flex-direction: row;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
   .label {
     width: 3em;
     margin-left: -1.5em;

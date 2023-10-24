@@ -1,12 +1,13 @@
 <script lang="ts">
   import ColorBlock from "./ColorBlock.svelte";
-  import { normalizedData, type DataPoint, isBlue } from "./colors";
+  import { normalizedData, type DataPoint, isBlue, rgbToHex } from "./colors";
   import convert from "color-convert";
   export let datum: DataPoint;
   export let v: Number;
   export let correct: boolean;
   export let incorrect: boolean;
   let blue: boolean;
+
   function updateBlueFromDatum(d: DataPoint) {
     blue = d.isBlue;
   }
@@ -26,12 +27,6 @@
   let customFormula = "b-(r+g)"; // Placeholder formula
   let yValue;
 
-  function rgbToHex(r: number, g: number, b: number): string {
-    return `#${((1 << 24) + (r << 16) + (g << 8) + b)
-      .toString(16)
-      .slice(1)
-      .toUpperCase()}`;
-  }
   let active = false;
 
   function changeColorValue() {
