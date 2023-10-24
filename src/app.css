@@ -1,7 +1,15 @@
+
+:root {
+  --button-color: #e5effa;
+  --button-fg: #0056b3;
+  --body-fg: #fafaff;
+  --body-bg: rgb(10, 10, 54);
+}
+
 main {  
   margin: auto;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-  --button-color : #eee0e0;
+ 
 }
 
 button {
@@ -11,6 +19,8 @@ button {
   display: grid;
   place-content: center;  
   background-color: var(--button-color);
+  color: var(--button-fg);
+  border: 1px solid var(--button-fg);
   font-family: inherit;
   box-shadow: 3px 3px 10px #000a;
   outline: none;
@@ -29,6 +39,28 @@ button:active {
   box-shadow: 3px 3px 10px #000a;
   /* Returns shadow to its normal state when pressed */
 }
+select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: var(--button-color);
+  border: 1px solid var(--button-fg);
+  color: var(--button-fg);
+  font-family: inherit;
+  appearance: none;
+  /* Removes the default browser styling */
+  cursor: pointer;
+}
+
+/* Optionally, you could add a focus style for accessibility */
+select:focus {
+  outline: none;
+  border-color: #000;
+}
+button,
+select {
+  transition: all 0.3s ease;
+}
 
 .tabs {
   display: flex;
@@ -44,4 +76,6 @@ button:active {
 .tabs > .active {
   border-bottom: none;
   font-weight: bold;
+  color: var(--button-fg);
+  border-color: var(--button-fg)
 }
