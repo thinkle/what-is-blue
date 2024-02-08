@@ -3,6 +3,7 @@
     normalizedData,
     getNormalizedColorData,
     isBlue,
+    targetName,
   } from "../lib/colors";
   import ColorBlock from "./ColorBlock.svelte";
 
@@ -35,7 +36,7 @@ Pick a color:<input type="color" bind:value={color} />
   {@const blue = score >= 0.5}
   <div>
     Model says:
-    {#if blue}Yes, it's blue!{:else}Not blue{/if}
+    {#if blue}Yes, it's {$targetName}!{:else}Not {$targetName}{/if}
     <pre>{score.toFixed(4)}</pre>
   </div>
   <div>Was it right? What say you, human :-)</div>
@@ -49,7 +50,7 @@ Pick a color:<input type="color" bind:value={color} />
       {:else}
         No, it's actually
       {/if}
-      blue
+      {$targetName}
     </button>
     <br />
     <button
@@ -61,7 +62,7 @@ Pick a color:<input type="color" bind:value={color} />
       {:else}
         Yes, it's not
       {/if}
-      blue
+      {$targetName}
     </button>
   </div>
 {/if}

@@ -1,7 +1,12 @@
 <script lang="ts">
   import ColorBlock from "./ColorBlock.svelte";
   import GraphPoint from "./GraphPoint.svelte";
-  import { normalizedData, type DataPoint, rgbToHex } from "./colors";
+  import {
+    normalizedData,
+    type DataPoint,
+    rgbToHex,
+    targetName,
+  } from "./colors";
   import convert from "color-convert";
   export let applyModel: (color: number[]) => number;
 
@@ -153,8 +158,8 @@
     <div class="label" style="left:100%">1.0</div>
   </section>
   <section class="divider">
-    <section class="not-blue">Not Blue</section>
-    <section class="blue">Blue</section>
+    <section class="not-blue">Not {$targetName}</section>
+    <section class="blue">{$targetName}</section>
   </section>
   <section class="data">
     {#each $normalizedData as datum}
@@ -285,6 +290,10 @@
   }
   section.blue {
     border-left: 5px solid blue;
+  }
+  .blue,
+  .not-blue {
+    text-transform: capitalize;
   }
   .incorrect {
     border: 2px solid red;

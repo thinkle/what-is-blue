@@ -7,6 +7,11 @@ for every color keyed in isBlue, we have a map to
 r,g,b values stores in colorMap */
 export const colorMap: { [key: string]: [number, number, number] } = {};
 
+export const resetColorData = () => {
+  isBlue.set({});
+  localStorage.deleteItem("is-blue");
+};
+
 export const isBlue: Writable<{ [key: string]: boolean }> = writable({});
 
 // Define a type for a single data point
@@ -104,3 +109,7 @@ export function rgbToHex(r: number, g: number, b: number): string {
     .slice(1)
     .toUpperCase()}`;
 }
+
+let startTargetName = localStorage.getItem("custom-target-name") || "blue";
+export const targetName = writable(startTargetName);
+targetName.subscribe((v) => localStorage.setItem("custom-target-name", v));

@@ -2,14 +2,25 @@
   import Trainer from "./lib/Trainer.svelte";
 
   import Categorizer from "./lib/Categorizer.svelte";
-  import { normalizedData } from "./lib/colors";
+  import { normalizedData, resetColorData, targetName } from "./lib/colors";
   //import ColorBlock from "./lib/ColorBlock.svelte";
   let showTrainer = false;
+  let customizeTarget = false;
+  customizeTarget;
 </script>
 
 <main>
   <div>
-    <h1>What is Blue?</h1>
+    <h1>
+      What is <a href="#target" on:click={() => (customizeTarget = true)}
+        >{$targetName}</a
+      >?
+    </h1>
+    {#if customizeTarget}
+      <input id="target" type="entry" bind:value={$targetName} />
+      <button on:click={() => resetColorData()}>Reset Color Data</button>
+      <button on:click={() => (customizeTarget = false)}>&times;</button>
+    {/if}
     <div class="tabs">
       <div on:click={() => (showTrainer = false)} class:active={!showTrainer}>
         Categorize
@@ -27,4 +38,7 @@
 </main>
 
 <style>
+  a {
+    color: inherit;
+  }
 </style>
