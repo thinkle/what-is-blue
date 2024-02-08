@@ -3,12 +3,18 @@
   import { crossfade } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import { flip } from "svelte/animate";
-  import { compareHue, getHue, isBlue } from "./colors";
+  import { compareHue, getHue, isBlue, targetName } from "./colors";
   import convert from "color-convert";
 
   const [send, receive] = crossfade({ duration: 300 });
 
-  let newColorMode: "default" | "blueish" | "blues" = "default";
+  let newColorMode:
+    | "default"
+    | "blueish"
+    | "blues"
+    | "warm"
+    | "cool"
+    | "green" = "default";
   let sortMode: "default" | "hue" = "default";
 
   let categorized: string[] = [];
@@ -38,13 +44,27 @@
         const b = Math.floor(Math.random() * 256);
         return [r, g, b];
       } else {
+        // blues
         let minHue = 179;
         let maxHue = 249;
         if (newColorMode == "blueish") {
           minHue = 173;
           maxHue = 295;
         }
+        if (newColorMode == "warm") {
+          minHue = -30;
+          maxHue = 69;
+        } else if (newColorMode == "cool") {
+          minHue = 158;
+          maxHue = 290;
+        } else if (newColorMode == "green") {
+          minHue = 70;
+          maxHue = 170;
+        }
         let h = Math.round(minHue + Math.random() * (maxHue - minHue));
+        if (h < 0) {
+          h = 360 - h;
+        }
         let s = Math.random() * 100;
         let l = Math.random() * 100;
         return convert.hsl.rgb(h, s, l);
@@ -83,6 +103,9 @@
       <option value="default">Random!</option>
       <option value="blueish">Teal/Blue/Purple Hues</option>
       <option value="blues">Blue Hues</option>
+      <option value="warm">Warm Hues</option>
+      <option value="cool">Cool Hues</option>
+      <option value="green">Green Hues</option>
     </select>
     <div class="ctr gradient">
       {#each [theColor] as c (c)}
@@ -94,11 +117,11 @@
     <div class="cols">
       <button
         style="--button-color: red;color:white;"
-        on:click={() => markNotBlue(theColor)}>Not Blue?</button
+        on:click={() => markNotBlue(theColor)}>Not {$targetName}?</button
       >
       <button
         style="--button-color: blue;color:white;"
-        on:click={() => markBlue(theColor)}>Blue!</button
+        on:click={() => markBlue(theColor)}>{$targetName}!</button
       >
     </div>
   </header>
@@ -236,5 +259,8 @@
   }
   .rel {
     position: relative;
+  }
+  button {
+    text-transform: capitalize;
   }
 </style>
