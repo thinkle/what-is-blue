@@ -133,7 +133,7 @@
 
     <div class="col notblue">
       <h2>
-        Not Blue
+        Not {$targetName}
         <div class="small">({notBlueColors.length})</div>
       </h2>
 
@@ -159,7 +159,7 @@
     <div class="divider" />
     <div class="col blue">
       <h2>
-        Blue
+        {$targetName}
         <div class="small">({blueColors.length})</div>
       </h2>
 
@@ -261,6 +261,9 @@
     position: relative;
   }
   button {
+    text-transform: capitalize;
+  }
+  h2 {
     text-transform: capitalize;
   }
 </style>
