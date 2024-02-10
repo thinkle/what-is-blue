@@ -1,6 +1,12 @@
 <script lang="ts">
   import ColorBlock from "./ColorBlock.svelte";
-  import { normalizedData, type DataPoint, isBlue, rgbToHex } from "./colors";
+  import {
+    normalizedData,
+    type DataPoint,
+    isBlue,
+    rgbToHex,
+    targetName,
+  } from "./colors";
   import convert from "color-convert";
   export let datum: DataPoint;
   export let v: Number;
@@ -42,15 +48,17 @@
 <article class:correct class:incorrect class:blue class:notblue={blue}>
   <button class="close" on:click={() => (active = false)}>&times;</button>
   <section>
-    Model says: {(v > 0.5 && "blue") || "not blue"} ({v?.toFixed(2)})
+    Model says: {(v > 0.5 && $targetName) || `not ${$targetName}`} ({v?.toFixed(
+      2
+    )})
   </section>
   <section>
     You say:
-    {#if blue}Blue
-    {:else}Not Blue{/if}
+    {#if blue}{$targetName}
+    {:else}Not {$targetName}{/if}
     <button on:click={() => changeColorValue()}>
-      Change to {#if blue}Not Blue
-      {:else}Blue{/if}
+      Change to {#if blue}Not {$targetName}
+      {:else}{$targetName}{/if}
     </button>
 
     <section>
