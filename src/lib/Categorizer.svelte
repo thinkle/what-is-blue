@@ -9,14 +9,15 @@
   import convert from "color-convert";
 
   const [send, receive] = crossfade({ duration: 300 });
-
+  let customTarget = "#2a3aef";
   let newColorMode:
     | "default"
     | "blueish"
     | "blues"
     | "warm"
     | "cool"
-    | "green" = "default";
+    | "green"
+    | "custom" = "default";
   let sortMode: "default" | "hue" = "default";
 
   let categorized: string[] = [];
@@ -45,6 +46,20 @@
         const g = Math.floor(Math.random() * 256);
         const b = Math.floor(Math.random() * 256);
         return [r, g, b];
+      } else if (newColorMode == "custom") {
+        let [r, g, b] = convert.hex.rgb(customTarget);
+        const [h, s, l] = convert.rgb.hsl(r, g, b);
+        // Generate random numbers for H, S, and L within the range of -15 to 15
+        let randomH = Math.random() * 30 - 15;
+        let randomS = Math.random() * 30 - 15;
+        let randomL = Math.random() * 30 - 15;
+
+        // Clamp the new H, S, and L values within their respective ranges
+        let h2 = (h + randomH + 360) % 360; // Hue is a circular value, so we wrap around using modulo 360
+        let s2 = Math.max(0, Math.min(100, s + randomS)); // Saturation must be between 0 and 100
+        let l2 = Math.max(0, Math.min(100, l + randomL)); // Lightness must be between 0 and 100
+
+        return convert.hsl.rgb(h2, s2, l2);
       } else {
         // blues
         let minHue = 179;
@@ -101,14 +116,22 @@
 
 <section class="categorizer">
   <header class="rel">
-    <select class="corner" bind:value={newColorMode}>
-      <option value="default">Random!</option>
-      <option value="blueish">Teal/Blue/Purple Hues</option>
-      <option value="blues">Blue Hues</option>
-      <option value="warm">Warm Hues</option>
-      <option value="cool">Cool Hues</option>
-      <option value="green">Green Hues</option>
-    </select>
+    <div class="corner">
+      <select class="" bind:value={newColorMode}>
+        <option value="default">Random!</option>
+        <option value="blueish">Teal/Blue/Purple Hues</option>
+        <option value="blues">Blue Hues</option>
+        <option value="warm">Warm Hues</option>
+        <option value="cool">Cool Hues</option>
+        <option value="green">Green Hues</option>
+        <option value="custom">Custom Target</option>
+      </select>
+      {#if newColorMode == "custom"}
+        <br /><label
+          >Colors near: <input bind:value={customTarget} type="color" /></label
+        >
+      {/if}
+    </div>
     <div class="ctr gradient">
       {#each [theColor] as c (c)}
         <div class="theColor" out:send={{ key: c }}>
