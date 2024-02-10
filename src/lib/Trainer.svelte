@@ -1,13 +1,11 @@
 <script lang="ts">
   import ModelTester from "./ModelTester.svelte";
-  import {
-    normalizedData,
-    getNormalizedColorData,
-    isBlue,
-  } from "../lib/colors";
   import { ColorModel } from "../neuralnet/model";
+
   import ColorGraph from "./ColorGraph.svelte";
   import ModelSettings from "./ModelSettings.svelte";
+  import { isTarget, normalizedData } from "./stores";
+  import { getNormalizedColorData } from "./colors";
   let weights: number[][][] | null = null;
   let progressUpdates: Array<{
     epoch: number;

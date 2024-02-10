@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { colorMap } from "./colors";
+  import { colorMap } from "./stores";
   export let color: string;
   let text = "white";
   let r: number;

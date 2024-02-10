@@ -1,12 +1,7 @@
 <script lang="ts">
   import ColorBlock from "./ColorBlock.svelte";
-  import {
-    normalizedData,
-    type DataPoint,
-    isBlue,
-    rgbToHex,
-    targetName,
-  } from "./colors";
+
+  import { isTarget, normalizedData, targetName } from "./stores";
   import convert from "color-convert";
   export let datum: DataPoint;
   export let v: Number;
@@ -14,6 +9,7 @@
   export let incorrect: boolean;
   let blue: boolean;
 
+  import { rgbToHex, type DataPoint } from "./colors";
   function updateBlueFromDatum(d: DataPoint) {
     blue = d.isBlue;
   }
@@ -38,7 +34,7 @@
   function changeColorValue() {
     blue = !blue;
     let hex = rgbToHex(...datum.color);
-    $isBlue[hex] = blue;
+    $isTarget[hex] = blue;
     datum.isBlue = blue;
     console.log("Set value for", hex, "to ", blue);
   }

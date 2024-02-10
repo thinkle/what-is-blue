@@ -3,7 +3,9 @@
   import { crossfade } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import { flip } from "svelte/animate";
-  import { compareHue, getHue, isBlue, targetName } from "./colors";
+  import { compareHue, getHue } from "./colors";
+  import { isTarget, targetName } from "./stores";
+
   import convert from "color-convert";
 
   const [send, receive] = crossfade({ duration: 300 });
@@ -19,7 +21,7 @@
 
   let categorized: string[] = [];
   $: {
-    categorized = Object.keys($isBlue);
+    categorized = Object.keys($isTarget);
     categorized.reverse();
   }
 
@@ -34,7 +36,7 @@
       g = g.toString(16).padStart(2, "0");
       b = b.toString(16).padStart(2, "0");
       c = `#${r}${g}${b}`;
-    } while (count < giveUpAfter && $isBlue.hasOwnProperty(c));
+    } while (count < giveUpAfter && $isTarget.hasOwnProperty(c));
     theColor = c;
 
     function generateColor() {
@@ -75,19 +77,19 @@
   newColor();
 
   function markBlue(c: string) {
-    $isBlue[c] = true;
+    $isTarget[c] = true;
     newColor();
   }
   function markNotBlue(c: string) {
-    $isBlue[c] = false;
+    $isTarget[c] = false;
     newColor();
   }
   let blueColors: [];
   let notBlueColors: [];
 
   function sortColors(categorized: string[], sortMode: "default" | "hue") {
-    blueColors = categorized.filter((c) => $isBlue[c]);
-    notBlueColors = categorized.filter((c) => !$isBlue[c]);
+    blueColors = categorized.filter((c) => $isTarget[c]);
+    notBlueColors = categorized.filter((c) => !$isTarget[c]);
     if (sortMode == "hue") {
       blueColors.sort(compareHue);
       notBlueColors.sort(compareHue);
@@ -143,14 +145,14 @@
             animate:flip
             in:receive={{ key: color }}
             out:send={{ key: color }}
-            on:click={() => ($isBlue[color] = true)}
+            on:click={() => ($isTarget[color] = true)}
           >
             <ColorBlock {color} />
           </li>
         {/each}
         <!-- No animatons after the first few for performance... -->
         {#each notBlueColors.slice(numberToAnimate) as color (color)}
-          <li on:click={() => ($isBlue[color] = true)}>
+          <li on:click={() => ($isTarget[color] = true)}>
             <ColorBlock {color} />
           </li>
         {/each}
@@ -169,14 +171,14 @@
             animate:flip
             in:receive={{ key: color }}
             out:send={{ key: color }}
-            on:click={() => ($isBlue[color] = false)}
+            on:click={() => ($isTarget[color] = false)}
           >
             <ColorBlock {color} />
           </li>
         {/each}
         {#each blueColors.slice(numberToAnimate) as color (color)}
           <!-- No animatons after the first few for performance... -->
-          <li on:click={() => ($isBlue[color] = false)}>
+          <li on:click={() => ($isTarget[color] = false)}>
             <ColorBlock {color} />
           </li>
         {/each}

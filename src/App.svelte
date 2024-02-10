@@ -2,8 +2,9 @@
   import Trainer from "./lib/Trainer.svelte";
 
   import Categorizer from "./lib/Categorizer.svelte";
-  import { normalizedData, resetColorData, targetName } from "./lib/colors";
-  //import ColorBlock from "./lib/ColorBlock.svelte";
+
+  import { targetName } from "./lib/stores";
+
   let showTrainer = false;
   let customizeTarget = false;
   customizeTarget;
@@ -17,9 +18,10 @@
       >?
     </h1>
     {#if customizeTarget}
-      <input id="target" type="entry" bind:value={$targetName} />
-      <button on:click={() => resetColorData()}>Reset Color Data</button>
-      <button on:click={() => (customizeTarget = false)}>&times;</button>
+      <div class="flex">
+        <input id="target" type="entry" bind:value={$targetName} />
+        <button on:click={() => (customizeTarget = false)}>&times;</button>
+      </div>
     {/if}
     <div class="tabs">
       <div on:click={() => (showTrainer = false)} class:active={!showTrainer}>
@@ -40,5 +42,14 @@
 <style>
   a {
     color: inherit;
+  }
+  .flex {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .flex input,
+  .flex button {
+    height: 32px;
   }
 </style>

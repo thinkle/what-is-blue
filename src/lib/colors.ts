@@ -1,18 +1,5 @@
-import { derived, writable } from "svelte/store";
-import type { Readable, Writable } from "svelte/store";
 import convert from "color-convert";
-
-/* Our svelte implementation will guarantee that 
-for every color keyed in isBlue, we have a map to
-r,g,b values stores in colorMap */
-export const colorMap: { [key: string]: [number, number, number] } = {};
-
-export const resetColorData = () => {
-  isBlue.set({});
-  localStorage.deleteItem("is-blue");
-};
-
-export const isBlue: Writable<{ [key: string]: boolean }> = writable({});
+import { colorMap } from "./stores";
 
 // Define a type for a single data point
 export type DataPoint = {
@@ -20,21 +7,6 @@ export type DataPoint = {
   isBlue: boolean;
 };
 
-// Load from local storage!
-let stored = localStorage.getItem("is-blue");
-if (stored) {
-  try {
-    let parsed = JSON.parse(stored);
-    isBlue.set(parsed);
-    console.log("Set is blue from memory to ", isBlue);
-  } catch (err) {
-    console.log("Error in saved data", stored);
-  }
-}
-
-isBlue.subscribe(($isBlue) =>
-  localStorage.setItem("is-blue", JSON.stringify($isBlue))
-);
 export function getNormalizedColorData(colorString: string) {
   if (colorMap[colorString]) {
     const [r, g, b] = colorMap[colorString];
@@ -72,23 +44,6 @@ export function getNormalizedColorData(colorString: string) {
   }
 }
 
-// Create a derived store to hold normalized color data
-export const normalizedData: Readable<DataPoint[]> = derived(
-  [isBlue], // List of stores to derive from
-  ([$isBlue], set) => {
-    // Convert the data in colorMap and isBlue to a normalized form
-    const data: DataPoint[] = Object.keys($isBlue).map((key) => {
-      return {
-        color: getNormalizedColorData(key),
-        isBlue: $isBlue[key],
-      };
-    });
-
-    // Set the value of the derived store
-    set(data);
-  }
-);
-
 export function getHue(c: string) {
   let [r, g, b] = getNormalizedColorData(c);
   let [h, s, l] = convert.rgb.hsl(r, g, b);
@@ -109,7 +64,3 @@ export function rgbToHex(r: number, g: number, b: number): string {
     .slice(1)
     .toUpperCase()}`;
 }
-
-let startTargetName = localStorage.getItem("custom-target-name") || "blue";
-export const targetName = writable(startTargetName);
-targetName.subscribe((v) => localStorage.setItem("custom-target-name", v));

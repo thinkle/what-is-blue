@@ -1,12 +1,10 @@
 <script lang="ts">
   import ColorBlock from "./ColorBlock.svelte";
   import GraphPoint from "./GraphPoint.svelte";
-  import {
-    normalizedData,
-    type DataPoint,
-    rgbToHex,
-    targetName,
-  } from "./colors";
+
+  import { targetName, normalizedData } from "./stores";
+  import type { DataPoint } from "./colors";
+  import { rgbToHex } from "./colors";
   import convert from "color-convert";
   export let applyModel: (color: number[]) => number;
 
@@ -38,9 +36,9 @@
     }
     if (mode == "Human Value") {
       if (perc == 1) {
-        return "Blue";
+        return $targetName;
       } else if (perc == 0) {
-        return "Not blue";
+        return `Not ${$targetName}`;
       } else {
         return "";
       }
@@ -52,11 +50,11 @@
     /* Get our position on the scale from 0-100 */
     let v = computeYValue(color, mode, customFormula);
     let scale = {
-      "Human Value": 100,
+      "Human Value": 360,
       Hue: 360,
       Saturation: 100,
       Luminance: 100,
-      "Custom Formula": 1024,
+      "Custom Formula": 100,
     }[mode];
     let yp = 100 * (v / scale);
     return yp;
@@ -89,6 +87,10 @@
         );
         yValue = calc(r, g, b, h, s, l);
         console.log("Successfully calculated", yValue, "with", calc);
+        if (isNaN(yValue)) {
+          console.log("NaN", yValue);
+          yValue = 50;
+        }
       } catch (err) {
         console.log(
           "error with custom formula",

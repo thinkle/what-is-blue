@@ -1,11 +1,8 @@
 <script lang="ts">
-  import {
-    normalizedData,
-    getNormalizedColorData,
-    isBlue,
-    targetName,
-  } from "../lib/colors";
+  import { targetName, normalizedData, isTarget } from "./stores";
+
   import ColorBlock from "./ColorBlock.svelte";
+  import { getNormalizedColorData } from "./colors";
 
   export let applyModel: (color: number[]) => number;
 
@@ -43,7 +40,7 @@ Pick a color:<input type="color" bind:value={color} />
   <div class="cols">
     <button
       style="--button-color:blue;color:white"
-      on:click={() => ($isBlue[color] = true)}
+      on:click={() => ($isTarget[color] = true)}
     >
       {#if blue}
         Yes, it's
@@ -55,7 +52,7 @@ Pick a color:<input type="color" bind:value={color} />
     <br />
     <button
       style="--button-color:red;color:white"
-      on:click={() => ($isBlue[color] = false)}
+      on:click={() => ($isTarget[color] = false)}
     >
       {#if blue}
         No, it's not
