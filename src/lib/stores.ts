@@ -49,6 +49,8 @@ function loadStoredColorData($targetName) {
     } catch (err) {
       console.log("Error in saved data", stored);
     }
+  } else {
+    isTarget.set({});
   }
 }
 loadStoredColorData(get(targetName));
