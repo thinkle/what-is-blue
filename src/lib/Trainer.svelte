@@ -8,7 +8,7 @@
   import { ColorModel } from "../neuralnet/model";
   import ColorGraph from "./ColorGraph.svelte";
   import ModelSettings from "./ModelSettings.svelte";
-
+  let weights: number[][][] | null = null;
   let progressUpdates: Array<{
     epoch: number;
     loss: number;
@@ -38,6 +38,8 @@
     applyModel = (v) => model.apply(v);
     model = cm;
     trainedLayers = JSON.stringify(modelLayers);
+    weights = cm.getWeights();
+    console.log("Got weights", weights);
     training = false;
   }
   let score: number;
@@ -51,7 +53,14 @@
       <button disabled={training} on:click={doTrainModel}>
         {#if !model}Train that Model!{:else}Train it some more!{/if}
       </button>
-      <ModelSettings layers={modelLayers} onChange={(v) => (modelLayers = v)} />
+      <ModelSettings
+        {weights}
+        {modelLayers}
+        onChange={(v) => {
+          modelLayers = v;
+          weights = null;
+        }}
+      />
       <ul class="progress-updates">
         {#each progressUpdates as { epoch, loss, accuracy }}
           <li>

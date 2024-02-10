@@ -72,6 +72,12 @@ class ColorModel {
     return score;
   }
 
+  getWeights(): number[][][] {
+    return this.model.layers.map(
+      (layer) => layer.getWeights()[0].arraySync() as number[][]
+    );
+  }
+
   // Additional methods like save() and load() could be added here in the future.
 }
 
