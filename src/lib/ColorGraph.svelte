@@ -50,7 +50,7 @@
     /* Get our position on the scale from 0-100 */
     let v = computeYValue(color, mode, customFormula);
     let scale = {
-      "Human Value": 360,
+      "Human Value": 100,
       Hue: 360,
       Saturation: 100,
       Luminance: 100,
@@ -196,7 +196,8 @@
     {/each}
   </section>
 </section>
-<div class="cols">
+
+<!-- <div class="cols">
   <div class="col">
     <h3>Colors</h3>
     {#each $normalizedData as datum}
@@ -215,7 +216,7 @@
       <div>{datum.isBlue}</div>
     {/each}
   </div>
-</div>
+</div> -->
 
 <style>
   .cols,
